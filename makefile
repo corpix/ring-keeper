@@ -10,4 +10,6 @@ lint:
 .PHONY: test
 test:
 	go test ./...
-	bash -ec 'cd test && bash ./generate && go run ../main.go --config config.json --dry-run'
+	bash -ec 'cd test && bash ./generate && go run ../main.go --verbose --config config.json --dry-run'
+	bash -ec 'cd test && go run ../main.go --verbose --config config.json'
+	bash -ec 'cd test && go run ../main.go --verbose --config config.json --dry-run'

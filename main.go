@@ -15,7 +15,10 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var dryRun bool
+var (
+	dryRun  bool
+	verbose bool
+)
 
 type WatcherConfig struct {
 	Directory string  `json:"directory"`
@@ -35,6 +38,11 @@ func app() *cli.App {
 			Aliases: []string{"c"},
 			Usage:   "configuration file path",
 			Value:   "config.json",
+		},
+		&cli.BoolFlag{
+			Name:  "verbose",
+			Usage: "be more verbose about operations performed",
+			Value: false,
 		},
 		&cli.BoolFlag{
 			Name:  "dry-run",
@@ -177,16 +185,31 @@ func runWatcher(wg *sync.WaitGroup, cfg *WatcherConfig) {
 			}
 		}
 
-		if dryRun {
+		if dryRun || verbose {
 			fmt.Println("max amount offenders:")
 			for _, file := range maxAmountOffenders {
 				fmt.Println(file.Path, file.ModTime())
 			}
-			fmt.Println("")
-
 			fmt.Println("max size offenders:")
 			for _, file := range maxSizeOffenders {
 				fmt.Println(file.Path, file.ModTime())
+			}
+		}
+		if !dryRun {
+			if verbose {
+				fmt.Println("offenders will be removed")
+			}
+			for _, file := range maxAmountOffenders {
+				err = os.Remove(file.Path)
+				if err != nil && !os.IsNotExist(err) {
+					log.Error().Err(err).Msgf("failed to remove path %q", file.Path)
+				}
+			}
+			for _, file := range maxSizeOffenders {
+				err = os.Remove(file.Path)
+				if err != nil && !os.IsNotExist(err) {
+					log.Error().Err(err).Msgf("failed to remove path %q", file.Path)
+				}
 			}
 		}
 	delay:
@@ -199,6 +222,7 @@ func runWatcher(wg *sync.WaitGroup, cfg *WatcherConfig) {
 
 func run(ctx *cli.Context) error {
 	dryRun = ctx.Bool("dry-run")
+	verbose = ctx.Bool("verbose")
 
 	cfg, err := config(ctx.String("config"))
 	if err != nil {
