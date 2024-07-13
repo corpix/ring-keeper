@@ -83,10 +83,6 @@ func config(path string) (Config, error) {
 				item.Directory,
 			)
 		}
-		if item.Delay == nil {
-			delay := 5 * 60 // 5 minutes
-			item.Delay = &delay
-		}
 	}
 	return cfg, nil
 }
@@ -194,7 +190,7 @@ func runWatcher(wg *sync.WaitGroup, cfg *WatcherConfig) {
 			}
 		}
 	delay:
-		if dryRun {
+		if dryRun || cfg.Delay == nil {
 			return
 		}
 		time.Sleep(time.Second * time.Duration(*cfg.Delay))
