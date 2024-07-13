@@ -1,0 +1,5 @@
+[{
+    "directory": "./subject",
+    "max-amount": 10,
+    "max-size": "5MB"
+}]

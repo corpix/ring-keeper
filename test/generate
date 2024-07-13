@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+set -e
+
+current_time=$(date +%s)
+
+if [ ! -d subject ]
+then
+    mkdir subject
+fi
+
+cd subject
+for i in {1..15}
+do
+    file_time=$((current_time + (i-1)*3600))
+    file_name="file_$i.txt"
+    dd if=/dev/zero of="$file_name" bs=1M count=1 2>/dev/null
+    touch -m -d "@$file_time" "$file_name"
+    echo "Created $file_name with mtime $(date -d "@$file_time")"
+done
