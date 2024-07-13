@@ -120,7 +120,7 @@ func getMaxAmountOffenders(directory string, maxAmount int) ([]FileInfo, error) 
 	}
 
 	sort.Slice(files, func(i, j int) bool {
-		return files[i].ModTime().Before(files[j].ModTime())
+		return files[i].ModTime().After(files[j].ModTime())
 	})
 
 	return files[maxAmount:], nil
@@ -143,7 +143,7 @@ func getMaxSizeOffenders(directory string, maxSize int64) ([]FileInfo, error) {
 	}
 
 	sort.Slice(files, func(i, j int) bool {
-		return files[i].ModTime().Before(files[j].ModTime())
+		return files[i].ModTime().After(files[j].ModTime())
 	})
 
 	skip := -1
