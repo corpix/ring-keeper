@@ -8,4 +8,4 @@ jobs:
     runs-on: nix
     steps:
       - uses: actions/checkout@v3
-      - run: nix develop --command make
+      - run: nix develop --command make GENERATOR_FILES_LIMIT=1500

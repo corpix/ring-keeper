@@ -8,8 +8,14 @@ then
     mkdir subject
 fi
 
+limit=15
+if [ ! -z "$GENERATOR_FILES_LIMIT" ]
+then
+    limit=$GENERATOR_FILES_LIMIT
+fi
+
 cd subject
-for i in {1..15}
+for ((i=1; i<=$limit; i++))
 do
     file_time=$((current_time + (i-1)*3600))
     file_name="file_$i.txt"
