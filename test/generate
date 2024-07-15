@@ -13,13 +13,18 @@ if [ ! -z "$GENERATOR_FILES_LIMIT" ]
 then
     limit=$GENERATOR_FILES_LIMIT
 fi
+size=1M
+if [ ! -z "$GENERATOR_FILE_SIZE" ]
+then
+    size=$GENERATOR_FILE_SIZE
+fi
 
 cd subject
 for ((i=1; i<=$limit; i++))
 do
     file_time=$((current_time + (i-1)*3600))
     file_name="file_$i.txt"
-    dd if=/dev/zero of="$file_name" bs=1M count=1 2>/dev/null
+    dd if=/dev/zero of="$file_name" bs=$size count=1 2>/dev/null
     touch -m -d "@$file_time" "$file_name"
     echo "Created $file_name with mtime $(date -d "@$file_time")"
 done
