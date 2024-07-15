@@ -26,5 +26,8 @@ do
     file_name="file_$i.txt"
     dd if=/dev/zero of="$file_name" bs=$size count=1 2>/dev/null
     touch -m -d "@$file_time" "$file_name"
-    echo "Created $file_name with mtime $(date -d "@$file_time")"
+    if [[ "$GENERATOR_VERBOSE" = "y" ]]
+    then
+        echo "Created $file_name with mtime $(date -d "@$file_time")"
+    fi
 done
